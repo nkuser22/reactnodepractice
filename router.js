@@ -2,8 +2,8 @@ const express = require("express");
 const Router = express.Router();
 
 Router.get("/",(req,resp)=>{
-    const userData=[{name:"Jhon",email:"jhon12@gmail.com",mobile:8765434567,age:23},
-        {name:"David",email:"David@gmail.com",mobile:8765434567,age:25} 
+    const userData=[{name:"Jhon",email:"jhon12@gmail.com",mobile:8765434567,age:23,userid:54367},
+        {name:"David",email:"David@gmail.com",mobile:8765434567,age:25,userid:54367} 
     ];
     resp.send(userData);
 });
