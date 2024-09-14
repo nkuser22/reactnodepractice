@@ -4,6 +4,8 @@ import Home from "./Components/Common/Home";
 import { Routes, Route } from "react-router-dom";
 import Userlisting from "./Components/Common/Userlisting";
 import Useregistration from "./Components/Common/Useregistration";
+import Pagination from "./Components/Common/Pagination";
+
 
 function App() {
   return (
@@ -17,6 +19,8 @@ function App() {
           <Route path="/" element={<Home />}></Route>
           <Route path="/userlisting" element={<Userlisting/>}></Route>
           <Route path="/useregistration" element={<Useregistration/>}></Route>
+          <Route path="/pagination" element={<Pagination/>}></Route>
+          
         </Routes>
       </div>
 

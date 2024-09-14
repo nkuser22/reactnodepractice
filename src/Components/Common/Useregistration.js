@@ -3,23 +3,53 @@ import { Link } from "react-router-dom";
 // npm install react-hook-form
 import { useForm } from "react-hook-form";
 
-function Useregistration() {
+// npm install axios
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
+
+function Useregistration() {
+  const navigate=useNavigate();
   const {register,formState: { errors },handleSubmit,} = useForm();
   const [countryData,setCountryData]=useState([]);
+  const [stateData,setStateData]=useState([]);
+  const [message,setMessage]=useState([]);
+  
  
   useEffect(()=>{
     const getCountry = async()=>{
-        const reqData =await fetch("http://localhost:4000/api/country");
+        const reqData =await fetch('http://localhost:4000/api/country');
         const resData= await reqData.json();
         setCountryData(resData);
         
     }
-  })
-  const onSubmit = (data) => {
-    console.log(data);
-  };
+    getCountry();
+  },[]);
 
+  const handleCountry=async(e)=>{
+    const getCountryid = e.target.value;
+    const reqStateData = await fetch("http://localhost:4000/api/state/"+getCountryid);
+    const resData =await reqStateData.json();
+    setStateData(resData);
+    console.log(resData);
+
+  }
+  const onSubmit =async (data) => {
+    const res=axios.post("http://localhost:4000/api/adduser",data)
+    .then(response=>{ setMessage(response.data);
+    
+  });
+
+  if(!message){
+    setMessage(res.data);
+    setTimeout(() => {
+      navigate('/userlisting');
+    }, 2000);
+
+  }else{
+    setMessage("Some Error Occured");
+  }
+  }
   
   return (
     <React.Fragment>
@@ -27,6 +57,7 @@ function Useregistration() {
         <div className="row">
           <div className="col-md-12">
             <h4 className="mt-2">User Registeration</h4>
+            <p className="text-success">{message}</p>
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="row">
                 <div className="col-md-6">
@@ -140,11 +171,11 @@ function Useregistration() {
                     <label className="form-lable">
                       Country<span className="text-danger">*</span>
                     </label>
-                    <select
+                    <select 
                     {...register("countryid",{ required: true })}
                      className="form-control"
                       placeholder="Country"
-                    >
+                     onChange={ handleCountry}>
                       <option value={""}>--Please Select--</option>
                       {
                         countryData.map((countryitem,index)=>(
@@ -155,9 +186,12 @@ function Useregistration() {
                       <option value={"2"}>INDIA</option>
                       <option value={"3"}>Other</option> */}
                     </select>
+                    { stateData.length===0 &&(
                     <span className="text-danger">
                       {errors.countryid?.type === "required" && "Country is required"}
                     </span>
+                    )
+                    }
                   </div>
                 </div>
                 <div className="col-md-6">
@@ -171,9 +205,14 @@ function Useregistration() {
                       placeholder="State"
                     >
                       <option value={""}>--Please Select--</option>
-                      <option value="1">Delhi</option>
+                      {
+                        stateData.map((stateitem,index)=>(
+                            <option value={stateitem.id} key={index}>{stateitem.name}</option>
+                        ))
+                      }
+                      {/* <option value="1">Delhi</option>
                       <option value={"2"}>Punjab</option>
-                      <option value={"3"}>Haryana</option>
+                      <option value={"3"}>Haryana</option> */}
                     </select>
                     <span className="text-danger">
                       {errors.stateid?.type === "required" && "State is required"}

@@ -1,9 +1,27 @@
-import React from "react";
+import axios from "axios";
+import React, { useState,useEffect,useRef } from "react";
 import { Link } from "react-router-dom";
-
+// npm install react-to-print
+import { useReactToPrint } from "react-to-print";
 
 function Userlisting(){
+    const componentPDF=useRef();
+    const [userData,setUserData]=useState([]);
+      
+    useEffect( ()=>{
+        const registeruserdata=async()=>{
+           axios.get("http://localhost:4000/api/registeruserdata")
+           .then(res=>setUserData(res.data))
+           .catch(error=>console.log(error));
+        }
+        registeruserdata();
+    },[]);
 
+    const generatpdf=useReactToPrint({
+        content: ()=>componentPDF.current,
+        documentTitle:"Userdata",
+        onAfterPrint: ()=>alert('Data Save in PDF')
+    });
     return(
         <React.Fragment>
         <div className="container">
@@ -13,6 +31,7 @@ function Userlisting(){
                 <div className="d-grid d-md-flex justify-content-md-end mb-3">
                     <Link to="/useregistration" className="btn btn-success">Add New User</Link>
                     </div>
+                    <div ref={componentPDF} style={{width:'100%'}}>
                     <table className="table table-bordered">
                         <thead className="bg-light">
                             <tr>
@@ -22,24 +41,37 @@ function Userlisting(){
                                 <th>Email</th>
                                 <th>Mobile</th>
                                 <th>Gender</th>
+                                <th>Country</th>
+                                <th>State</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>Nk Saini</td>
-                                <td>NK4321</td>
-                                <td>nk@gmail.com</td>
-                                <td>1212121212</td>
-                                <td>Male</td>
+                        {
+                            userData.map( (uData, index)=>(
+                            
+                            <tr key={index}>
+                                <td>{index+1}</td>
+                                <td>{uData.name}</td>
+                                <td>{uData.username}</td>
+                                <td>{uData.email}</td>
+                                <td>{uData.mobile}</td>
+                                <td>{uData.gender}</td>
+                                <td>{uData.countryname}</td>
+                                <td>{uData.statename}</td>
                                 <td>
                                    <Link to={"/userEdit"} className="btn btn-success mx-2">Edit</Link>
                                    <Link to={"/userDelete"} className="btn btn-danger">Delete</Link>
                                 </td>
                             </tr>
+                            ))
+                        }
                         </tbody>
                     </table>
+                    </div>
+                    <div className="d-grid d-md-flex justify-content-md-end mb-3">
+                    <button className="btn btn-success" onClick={generatpdf}>PDF</button>
+                    </div>
                 
                 </div>
             </div>
