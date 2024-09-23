@@ -6,6 +6,8 @@ const app=express();
 const port=4000;
 const RouterPath = require('./router');
 const sqlDbconnect=require('./dbconnect');
+const colours=require("colours");
+//console.log("Welcome to color package".red);
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -18,4 +20,4 @@ app.use("/login",RouterPath);
 
 
 
-app.listen(port,()=>console.log("Server runing on port"));
+app.listen(port,()=>console.log("Server runing on port ",port));

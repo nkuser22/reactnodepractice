@@ -11,7 +11,7 @@ sqlconnect.connect((err)=>{
     if(!err){
          console.log("Database Connected!");
     }else{
-         console.log("Not Connected");
+         console.log("Database Not Connected");
 }
 });
 
